@@ -165,10 +165,10 @@ MEDIA_URL = '/media/'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_DEFAULT_ACL = None
+AWS_S3_SECURE_URLS = True
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_SECRET')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_SECURE_URLS = True
-AWS_DEFAULT_ACL = None
 
 # file storage options ['local','S3','gdrive','office365']
 # TODO: add integration for gdrive and office365
