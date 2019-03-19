@@ -41,7 +41,7 @@ pipeline:
       status: [ success ]
 
   deploy-docs:
-    image: python:${PYTHON_VERSION}
+    image: python:3.6
     commands:
       - bash scripts/tcp-port-wait.sh $${DATABASE_HOST} $${DATABASE_PORT}
       - pip install -r requirements/base.txt
