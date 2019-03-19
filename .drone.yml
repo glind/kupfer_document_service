@@ -71,6 +71,8 @@ pipeline:
       event: [push, tag]
       branch: [master]
       status: [success]
+    environment:
+      - SECRET_KEY=nothing
 
   notify:
     image: plugins/slack
