@@ -43,7 +43,7 @@ pipeline:
   deploy-docs:
     image: python:${PYTHON_VERSION}
     commands:
-      - bash scripts/tcp-port-wait.sh $${DATABASE_HOST} $${DATABASE_PORT}
+      - bash scripts/tcp-port-wait.sh postgres 5432
       - pip install -r requirements/base.txt
       - python manage.py generate_swagger > swagger.json
       - eval "$(ssh-agent -s)"
