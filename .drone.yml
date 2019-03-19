@@ -72,7 +72,13 @@ pipeline:
       branch: [master]
       status: [success]
     environment:
-      - SECRET_KEY=nothing
+      - DATABASE_ENGINE=postgresql
+      - DATABASE_NAME=documents_service
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - SECRET_KEY=nothing 
 
   notify:
     image: plugins/slack
