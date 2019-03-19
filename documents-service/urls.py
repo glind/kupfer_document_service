@@ -27,7 +27,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 swagger_info = openapi.Info(
-        title="Products Service API",
+        title="Documents Service API",
         default_version='latest',
         description="Test description",
 )
