@@ -179,3 +179,8 @@ FILE_STORAGE = "local"
 JWT_ALLOWED_ISSUER = 'bifrost'
 JWT_PUBLIC_KEY_RSA_BIFROST = os.getenv('JWT_PUBLIC_KEY_RSA_BIFROST')
 JWT_AUTH_DISABLED = True
+
+# Swagger settings - for generate_swagger management command
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'products_service.urls.swagger_info',
+}
