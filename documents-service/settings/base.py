@@ -182,5 +182,5 @@ JWT_AUTH_DISABLED = True
 
 # Swagger settings - for generate_swagger management command
 SWAGGER_SETTINGS = {
-    'DEFAULT_INFO': 'documents_service.urls.swagger_info',
+    'DEFAULT_INFO': 'documents-service.urls.swagger_info',
 }
