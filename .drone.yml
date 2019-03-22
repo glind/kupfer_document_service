@@ -29,16 +29,21 @@ pipeline:
 
   build-docker-image-tag:
     image: plugins/docker
-    insecure: true
-    registry: registry.tola.io
-    repo: registry.tola.io/humanitec-walhall/documents_service
-    file: Dockerfile
+    registry:
+      from_secret: DOCKER_REGISTRY
+    repo:
+      from_secret: DOCKER_REPO
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
     auto_tag: true
-    secrets: [DOCKER_USERNAME, DOCKER_PASSWORD]
+    insecure: true
+    file: Dockerfile
     when:
-      event: [push, tag]
+      event: [tag]
       branch: [master]
-      status: [ success ]
+      status: [success]
 
   deploy-docs:
     image: python:3.6
