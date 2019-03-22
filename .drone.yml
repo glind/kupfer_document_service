@@ -1,7 +1,7 @@
 ---
 pipeline:
   test:
-    image: python:${PYTHON_VERSION}
+    image: python:3.6
     commands:
       - bash scripts/tcp-port-wait.sh postgres 5432
       - bash scripts/run-tests.sh --ci
@@ -20,7 +20,7 @@ pipeline:
       - SECRET_KEY=nothing
 
   bandit:
-    image: python:${PYTHON_VERSION}
+    image: python:3.6
     commands:
       - pip install bandit
       - bandit -x tests/ -r -lll .
@@ -101,7 +101,3 @@ services:
       - POSTGRES_DB=documents_service
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-
-matrix:
-  PYTHON_VERSION:
-    - 3.6
