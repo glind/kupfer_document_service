@@ -42,7 +42,6 @@ pipeline:
     file: Dockerfile
     when:
       event: [tag]
-      branch: [master]
       status: [success]
 
   deploy-docs:
