@@ -1,14 +1,14 @@
-from django.urls import path
-from rest_framework.documentation import include_docs_urls
+from django.urls import re_path
 
-from documents import views as document_views
+from documents.views import DocumentViewSet, document_download_view, document_thumbnail_view
 from .routers import OptionalSlashRouter
 
 router = OptionalSlashRouter()
-router.register(r'documents', document_views.DocumentViewSet)
+router.register(r'documents', DocumentViewSet)
 
 urlpatterns = [
-    path('docs/', include_docs_urls(title='Documents Service')),
+    re_path(r'^file/(?P<id>\w+)/$', document_download_view),
+    re_path(r'^thumbnail/(?P<id>\w+)/$', document_thumbnail_view),
 ]
 
 urlpatterns += router.urls
