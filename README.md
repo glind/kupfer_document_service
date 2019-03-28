@@ -1,11 +1,58 @@
-Gokhan test
-# Documents Service
+# Documents Service (Django)
 
-Microservice for the documents API. It allows the user to store static files
-in Amazon S3.
+## Overview
+
+The documents service provides the backend with an API for storing static files
+in an Amazon S3 Bucket and retrieving them. 
+Therefore it exposes the Document data model, which holds all data about a file 
+and endpoints for retrieving the file or thumbnail directly.  
 
 
-## Deploy locally via Docker
+## REST Data models
+
+### Document
+
+A _Document_ is representation of a stored file. It includes the following properties::
+
+- **id**: ID of the document
+- **uuid**: UUID of the document
+- **file**: The actual file which was uploaded
+- **thumbnail**: A thumbnail created from the file, if it was in PNG-,GIF- or JPEG-Format
+- **file_description**: Textual Description about the file
+- **file_name**: Name of the file
+- **upload_date**: Date when the document was first created (automatically set)
+- **create_date**: Date, which is not automatically set
+- **organization_uuid**: Organization of the Document
+- **user_uuid**: User of the Document 
+- **contact_uuid**: Contact of the Document
+- **workflowlevel1_uuids**: Workflowlevel1s related to the Document
+- **workflowlevel2_uuids**: Workflowlevel2s related to the Document
+
+#### Endpoints
+
+-  `GET /documents/`: Retrieves a list of documents.
+-  `POST /documents/`: Creates a new document.
+-  `GET /documents/{id}/`: Retrieves a documents by its ID.
+-  `PUT /documents/{id}/`: Updates the document with the given ID (all fields).
+-  `PATCH /documents/{id}/`: Updates the document with the given ID (only specified fields).
+-  `DELETE /documents/{id}/`: Deletes the document with the given ID.
+
+## Non-model endpoints
+
+-  `GET /documents/file/{id}`: Retrieves the file attached to the document with the given ID.
+-  `GET /documents/thumbnail/{id}`: Retrieves the thumbnail attached to the document with the given ID.
+
+
+[Click here for the full API documentation.](https://docs.walhall.io/marketplace/documents-module/)
+
+
+## Local development
+
+### Prerequisites
+
+You must have [Docker](https://www.docker.com/) installed.
+
+### Deploy locally via Docker
 
 Build first the images:
 
@@ -51,7 +98,7 @@ docker-compose run --entrypoint 'bash' --rm documents_service
 
 ### Environment Variables
 
-The following environment variables need to be configured in  order to make 
+The following environment variables need to be configured in order to make 
 the service work correctly:
 * `ALLOWED_HOSTS`
 * `CORS_ORIGIN_WHITELIST`
@@ -66,3 +113,14 @@ the service work correctly:
  * `AWS_ACCESS_KEY_ID`
  * `AWS_ACCESS_KEY_SECRET`
  * `AWS_S3_BUCKET`
+
+
+## API documentation (Swagger)
+
+[Click here to go to the full API documentation.](https://docs.walhall.io/marketplace/documents-module/)
+
+## License
+
+Copyright &#169;2019 Humanitec GmbH.
+
+This code is released under the [Humanitec Affero GPL](LICENSE).
