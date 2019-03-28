@@ -23,16 +23,16 @@ A _Document_ is representation of a stored file. It includes the following prope
 - **id**: ID of the document.
 - **uuid**: UUID of the document.
 - **file**: The actual file which was uploaded.
-- **thumbnail**: A thumbnail created from the file, if it was in PNG-,GIF- or JPEG-Format.
-- **file_description**: Textual Description about the file.
+- **thumbnail**: A thumbnail created from the file, if it was in PNG-, GIF- or JPEG-format.
+- **file_description**: Textual description about the file.
 - **file_name**: Name of the file.
 - **upload_date**: Date when the document was first created (automatically set).
 - **create_date**: Date, which is not automatically set.
-- **organization_uuid**: Organization of the Document.
-- **user_uuid**: User of the Document .
-- **contact_uuid**: Contact of the Document.
-- **workflowlevel1_uuids**: Workflowlevel1s related to the Document.
-- **workflowlevel2_uuids**: Workflowlevel2s related to the Document.
+- **organization_uuid**: Organization of the document.
+- **user_uuid**: User of the document.
+- **contact_uuid**: Contact of the document.
+- **workflowlevel1_uuids**: Workflowlevel1s related to the document.
+- **workflowlevel2_uuids**: Workflowlevel2s related to the document.
 
 #### Endpoints
 
@@ -47,9 +47,6 @@ A _Document_ is representation of a stored file. It includes the following prope
 
 -  `GET /documents/file/{id}`: Retrieves the file attached to the document with the given ID.
 -  `GET /documents/thumbnail/{id}`: Retrieves the thumbnail attached to the document with the given ID.
-
-
-[Click here for the full API documentation.](https://docs.walhall.io/api/marketplace/documents-service/)
 
 ## Local development
 
@@ -98,7 +95,6 @@ To run bash:
 docker-compose run --entrypoint 'bash' --rm documents_service
 ```
 
-
 ## Deploy to server
 
 ### Environment Variables
@@ -120,6 +116,10 @@ the service work correctly:
  -  `AWS_ACCESS_KEY_ID`
  -  `AWS_ACCESS_KEY_SECRET`
  -  `AWS_S3_BUCKET`
+
+## API documentation (Swagger)
+
+[Click here for the full API documentation.](https://docs.walhall.io/api/marketplace/documents-service/)
 
 ## License
 
