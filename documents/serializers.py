@@ -1,46 +1,18 @@
+from django.urls import reverse
 from rest_framework import serializers
-from .models import Document, FILE_TYPE_CHOICES
-import base64
-import uuid
-from django.core.files.base import ContentFile
-
-
-class Base64FileField(serializers.FileField):
-    base_url = '/documents/file/{}/'
-
-    def to_representation(self, value):
-        if not value:
-            return None
-
-        doc = Document.objects.get(file=value)
-        url = self.base_url.format(doc.id)
-
-        return url
-
-    def to_internal_value(self, data):
-        if isinstance(data, str) and (data.startswith('data:')):
-            format, filestr = data.split(';base64,')
-            ext = format.split('/')[-1]
-
-            if ext not in [ft[0] for ft in FILE_TYPE_CHOICES]:
-                super(Base64FileField, self).fail('invalid')
-
-            id = uuid.uuid4()
-            data = ContentFile(base64.b64decode(filestr),
-                               name=id.urn[9:] + '.' + ext)
-        return super(Base64FileField, self).to_internal_value(data)
+from .models import Document
 
 
 class MaskedThumbnailField(serializers.ReadOnlyField):
-    base_url = '/documents/thumbnail/{}/'
 
     def to_representation(self, value):
         if not value:
             return None
-
         doc = Document.objects.get(thumbnail=value)
-        url = self.base_url.format(doc.id)
-
+        # replace direct file link with file entry point URL
+        base_url = self.context['request']._request.path.rstrip('/') \
+            if self.context.get('request') else ''
+        url = f'{base_url}/thumbnail/{doc.id}'
         return url
 
     def to_internal_value(self, data):
@@ -51,9 +23,17 @@ class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     uuid = serializers.ReadOnlyField()
     upload_date = serializers.ReadOnlyField()
-    file = Base64FileField()
     thumbnail = MaskedThumbnailField()
 
     class Meta:
         model = Document
         fields = '__all__'
+
+    def to_representation(self, instance, **kwargs):
+        # replace direct file link with file entry point URL
+        base_url = self.context['request']._request.path.rstrip('/') \
+            if self.context.get('request') else ''
+        data = super().to_representation(instance)
+        data['file'] = base_url + reverse('document-file', args=(instance.id,)) \
+            if data['file'] else None
+        return data

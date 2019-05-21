@@ -2,6 +2,8 @@
 from datetime import datetime
 import uuid
 import re
+from io import BytesIO
+from PIL import Image
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -214,7 +216,7 @@ class DocumentListViewsTest(TestCase):
 
         mfactories.Document(file_name='Document2.pdf')
 
-        request = self.factory.get('')
+        request = self.factory.get('/dynamic-path/')
         request.user = self.user
         view = DocumentViewSet.as_view({'get': 'list'})
         response = view(request)
@@ -223,7 +225,7 @@ class DocumentListViewsTest(TestCase):
         documents_data = response.data['results']
         self.assertEqual(len(documents_data), 2)
 
-        url = "/documents/file/{}/".format(doc1.pk)
+        url = "/dynamic-path/file/{}/".format(doc1.pk)
 
         self.assertEquals(documents_data[0]['file'], url)
         self.assertIsNone(documents_data[1]['file'])
@@ -256,19 +258,19 @@ class DocumentCreateViewsTest(TestCase):
         self.user = mfactories.User()
         conn = boto3.resource('s3', region_name='us-east-1')
         conn.create_bucket(Bucket=settings.AWS_STORAGE_BUCKET_NAME)
+        image = Image.new('RGBA', size=(10, 10), color=(155, 0, 0))
+        self.file = BytesIO()
+        image.save(self.file, 'png')
+        self.file.seek(0)
 
     def test_create_document_minimal(self):
         contact_uuid = str(uuid.uuid4())
-
         data = {
             'file_name': u'Testfile.png',
-            'file': 'data:image/png;base64,'
-                    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR'
-                    '42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==',
+            'file': self.file,
             'workflowlevel1_uuids': [str(uuid.uuid4())],
             'contact_uuid': contact_uuid,
         }
-
         request = self.factory.post('', data)
         request.user = self.user
         view = DocumentViewSet.as_view({'post': 'create'})
@@ -290,9 +292,7 @@ class DocumentCreateViewsTest(TestCase):
 
         data = {
             'file_name': u'Testfile.png',
-            'file': 'data:image/png;base64,'
-                    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR'
-                    '42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==',
+            'file': self.file,
             'create_date': create_date,
             'workflowlevel1_uuids': workflowlevel1_uuids,
             'workflowlevel2_uuids': workflowlevel2_uuids,
@@ -346,9 +346,7 @@ class DocumentCreateViewsTest(TestCase):
         contact_uuid = str(uuid.uuid4())
         data = {
             'file_name': u'Testfile.exe',
-            'file': 'data:image/png;base64,'
-                    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR'
-                    '42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==',
+            'file': self.file,
             'workflowlevel1_uuids': [str(uuid.uuid4())],
             'contact_uuid': contact_uuid,
         }
