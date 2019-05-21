@@ -7,7 +7,7 @@ router = OptionalSlashRouter()
 router.register(r'documents', DocumentViewSet)
 
 urlpatterns = [
-    re_path(r'^file/(?P<id>\w+)/$', document_download_view),
+    re_path(r'^file/(?P<id>\w+)/$', document_download_view, name='document-file'),
     re_path(r'^thumbnail/(?P<id>\w+)/$', document_thumbnail_view),
 ]
 
