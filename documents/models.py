@@ -8,7 +8,7 @@ from django.core.files.base import ContentFile
 from django.db import models
 
 from functools import partial
-from PIL import Image
+from PIL import Image, ExifTags
 
 try:
     from django.utils import timezone
@@ -109,6 +109,31 @@ class Document(models.Model):
 
         super(Document, self).save()
 
+    @staticmethod
+    def _rotate_image(image) -> Image:
+        """
+        Correct rotation according to the EXIF data.
+        :param image
+        :return: image
+        """
+        # Todo: write tests for the correct evaluation of image tags and rotation,
+        #   p.e by checking the size coordinates after the rotation
+        try:
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
+            exif = dict(image._getexif().items())
+            if exif[orientation] == 3:
+                image = image.rotate(180, expand=True)
+            elif exif[orientation] == 6:
+                image = image.rotate(270, expand=True)
+            elif exif[orientation] == 8:
+                image = image.rotate(90, expand=True)
+        except (AttributeError, KeyError, IndexError):
+            # cases: image don't have _getexif
+            pass
+        return image
+
     def make_thumbnail(self):
         if self.file_type in ['jpg', 'jpeg']:
             ftype = 'JPEG'
@@ -121,6 +146,8 @@ class Document(models.Model):
 
         # load image
         image = Image.open(self.file)
+
+        image = self._rotate_image(image)
 
         # scale and crop image to maintain ratio
         size = THUMBNAIL_DIMENSIONS
