@@ -105,7 +105,7 @@ class Document(models.Model):
         self.full_clean()
 
         if self.file_type in IMAGE_FILE_TYPES and self.file:
-            self.make_thumbnail()
+            self.rotate_and_make_thumbnail()
 
         super(Document, self).save()
 
@@ -134,7 +134,7 @@ class Document(models.Model):
             pass
         return image
 
-    def make_thumbnail(self):
+    def rotate_and_make_thumbnail(self):
         if self.file_type in ['jpg', 'jpeg']:
             ftype = 'JPEG'
         elif self.file_type == 'gif':
@@ -147,7 +147,9 @@ class Document(models.Model):
         # load image
         image = Image.open(self.file)
 
+        # fix rotation and save it to file
         image = self._rotate_image(image)
+        image.save(self.file, ftype)
 
         # scale and crop image to maintain ratio
         size = THUMBNAIL_DIMENSIONS
