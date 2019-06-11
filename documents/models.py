@@ -149,7 +149,10 @@ class Document(models.Model):
 
         # fix rotation and save it to file
         image = self._rotate_image(image)
-        image.save(self.file, ftype)
+        rotated_image = BytesIO()
+        image.save(rotated_image, ftype)  # a new correctly rotated file will be created without the EXIF data
+        rotated_image.seek(0)
+        self.file = ContentFile(rotated_image.read(), name=self.file.name)
 
         # scale and crop image to maintain ratio
         size = THUMBNAIL_DIMENSIONS
